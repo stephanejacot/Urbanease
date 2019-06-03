@@ -7,7 +7,14 @@
         "type": "Point",
         "coordinates": [-1.54656473, 43.45715065]
       },
-      "properties": { "prop0": "value0" }
+      "properties": {
+        "name": "chez moi",
+        "co_insee_com": "64200",
+        "lb_com": "BIARRITZ",
+        "lb_voie_ext": "IMPASSE CLOUZARD",
+        "va_no_voie": "4"
+      },
+      "id": "mon_adresse"
     },
 
     {
@@ -23,7 +30,7 @@
       },
       "properties": {
         "prop0": "value0",
-        "prop1": 0.0
+        "prop1": { "this": "that" }
       }
     }
   ]

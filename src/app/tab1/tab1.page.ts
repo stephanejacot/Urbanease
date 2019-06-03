@@ -8,6 +8,7 @@ import {
   geoJSON,
   GeoJSON
 } from "leaflet";
+import { Geolocation } from "@ionic-native/geolocation/ngx";
 
 @Component({
   selector: "app-tab1",
@@ -24,7 +25,7 @@ export class Tab1Page {
 
   leafletMap() {
     // In setView add latLng and zoom
-    this.map = new Map("mapId").setView([43.45715065, -1.54656473], 16);
+    this.map = new Map("mapId").setView([43.45715065, -1.54656473], 17);
     tileLayer(
       "http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
       {
