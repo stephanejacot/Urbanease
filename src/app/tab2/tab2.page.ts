@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
-import { Map, tileLayer, marker } from "leaflet";
+import { Map, tileLayer } from "leaflet";
+import { Geolocation } from "@ionic-native/geolocation/ngx";
+import { NavController } from "@ionic/angular";
 
 @Component({
   selector: "app-tab2",
@@ -8,27 +10,39 @@ import { Map, tileLayer, marker } from "leaflet";
 })
 export class Tab2Page {
   map: Map;
+  lat: any;
+  lng: any;
 
+  constructor(public navCtrl: NavController, public geo: Geolocation) {}
+
+  position() {
+    this.geo
+      .getCurrentPosition()
+      .then(pos => {
+        this.lat = pos.coords.latitude;
+        this.lng = pos.coords.longitude;
+      })
+      .catch(error => {
+        console.log("Error getting location", error);
+      });
+  }
   ionViewDidEnter() {
     this.leafletMap();
+    this.position();
   }
 
   leafletMap() {
-    this.map = new Map("mapId2").setView([43.45715065, -1.54656473], 15);
+    this.map = new Map("mapId2").locate({
+      setView: true,
+      maxZoom: 25
+    });
 
-    tileLayer(
-      "http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution: "edupala.com © ionic LeafLet"
-      }
-    ).addTo(this.map);
-
-    marker([43.45715065, -1.54656473])
-      .addTo(this.map)
-      .bindPopup("My house <br> in JSON")
-      .openPopup();
+    tileLayer("http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
+      attribution: "edupala.com © ionic LeafLet"
+    }).addTo(this.map);
   }
 
+  /** Remove map when we have multiple map object */
   ionViewWillLeave() {
     this.map.remove();
   }

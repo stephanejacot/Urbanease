@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
-import { Map, tileLayer, circle, marker } from "leaflet";
+import { Map, tileLayer, circle } from "leaflet";
+import { NavController } from "@ionic/angular";
+import { Geolocation } from "@ionic-native/geolocation/ngx";
 
 @Component({
   selector: "app-tab3",
@@ -8,9 +10,22 @@ import { Map, tileLayer, circle, marker } from "leaflet";
 })
 export class Tab3Page {
   map: Map;
+  lat: any;
+  lng: any;
 
-  constructor() {}
+  constructor(public navCtrl: NavController, public geo: Geolocation) {}
 
+  ionViewDidload() {
+    this.geo
+      .getCurrentPosition()
+      .then(pos => {
+        this.lat = pos.coords.latitude;
+        this.lng = pos.coords.longitude;
+      })
+      .catch(error => {
+        console.log("Error getting location", error);
+      });
+  }
   ionViewDidEnter() {
     this.leafletMap();
   }
@@ -26,7 +41,7 @@ export class Tab3Page {
     circle([43.4729162, -1.5552014], {
       color: "blue",
       fillColor: "blue",
-      fillOpacity: 0.5,
+      fillOpacity: 0.2,
       radius: 10
     }).addTo(this.map);
   }
