@@ -1,13 +1,5 @@
 import { Component } from "@angular/core";
-import {
-  Map,
-  latLng,
-  tileLayer,
-  Layer,
-  marker,
-  geoJSON,
-  GeoJSON
-} from "leaflet";
+import { Map, tileLayer, geoJSON } from "leaflet";
 import { Geolocation } from "@ionic-native/geolocation/ngx";
 
 @Component({
