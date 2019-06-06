@@ -1,9 +1,6 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>GeoJSON </ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
 <ion-content>
-  <div id="mapId" style="width: 100%; height: 100%"></div>
+  <p>Lat: {{ locationCoords.latitude }} Lng: {{ locationCoords.longitude }}</p>
+  <!-- <p>Accuracy: {{ locationCoords.accuracy }}</p> -->
+  <p>{{ locationCoords.timestamp | date: "medium" }}</p>
+  <div id="map" style="width: 100%; height: 100%"></div>
 </ion-content>

@@ -1,6 +1,11 @@
-import { Component } from "@angular/core";
-import { Map, tileLayer, geoJSON } from "leaflet";
+import { Component, ViewChild, ElementRef } from "@angular/core";
+import { Map, tileLayer } from "leaflet";
 import { Geolocation } from "@ionic-native/geolocation/ngx";
+import { NavController } from "@ionic/angular";
+import {
+  NativeGeocoder,
+  NativeGeocoderOptions
+} from "@ionic-native/native-geocoder/ngx";
 
 @Component({
   selector: "app-tab1",
@@ -8,36 +13,65 @@ import { Geolocation } from "@ionic-native/geolocation/ngx";
   styleUrls: ["tab1.page.scss"]
 })
 export class Tab1Page {
+  @ViewChild("map") mapContainer: ElementRef;
   map: Map;
-  // propertyList: GeoJSON.FeatureCollection<any>;
+  lat: any;
+  lng: any;
+  locationCoords: any;
+  timetest: any;
+
+  constructor(public navCtrl: NavController, private geolocation: Geolocation) {
+    this.locationCoords = {
+      latitude: "",
+      longitude: "",
+      accuracy: "",
+      timestamp: ""
+    };
+    this.timetest = Date.now();
+  }
 
   ionViewDidEnter() {
-    this.leafletMap();
+    this.loadMap();
+    this.getLocationCoord();
   }
-
-  leafletMap() {
-    // In setView add latLng and zoom
-    this.map = new Map("mapId").setView([43.45715065, -1.54656473], 17);
-    tileLayer(
-      "http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution: "edupala.com © ionic LeafLet"
-      }
-    ).addTo(this.map);
-
-    fetch("/assets/data.json")
-      .then(res => res.json())
-      .then(json => {
-        console.log(json);
-        geoJSON(json).addTo(this.map);
+  // add map and add geolocation
+  loadMap() {
+    this.map = new Map("map").locate({
+      setView: true,
+      maxZoom: 24
+    });
+    // .on("locationfound", e => {
+    //   let markerGroup = Map.featureGroup();
+    //   let marker: any = Map.marker([e.latitude, e.longitude]).on(
+    //     "click",
+    //     () => {
+    //       alert("Marker clicked");
+    //     }
+    //   );
+    //   markerGroup.addLayer(marker);
+    //   this.map.addLayer(markerGroup);
+    // })
+    // .on("locationerror", err => {
+    //   alert(err.message);
+    // });
+    tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "www.tphangout.com"
+    }).addTo(this.map);
+  }
+  // Method to get device accurate coordinates using device GPS
+  getLocationCoord() {
+    this.geolocation
+      .getCurrentPosition()
+      .then(pos => {
+        this.locationCoords.latitude = pos.coords.latitude;
+        this.locationCoords.longitude = pos.coords.longitude;
+        this.locationCoords.accuracy = pos.coords.accuracy;
+        this.locationCoords.timestamp = pos.timestamp;
+      })
+      .catch(error => {
+        console.log("Error getting location", error);
       });
-
-    // marker([0, 100])
-    //   .addTo(this.map)
-    //   .bindPopup("Ionic 4 <br> Leaflet.")
-    //   .openPopup();
   }
-
   /** Remove map when we have multiple map object */
   ionViewWillLeave() {
     this.map.remove();
